@@ -220,3 +220,37 @@ The final **16-bit right shift (`>>16`)** normalizes the accumulated result back
 * Avoids runtime division by using compile-time scaling factors.
 * Uses only integer arithmetic, bit shifts, multiplications, and additions.
 * Produces a synthesizable and hardware-efficient implementation suitable for FPGA and ASIC designs while maintaining interpolation accuracy.
+
+  ## Simulation
+
+The SCALE-X image scaling engine was functionally verified using **Xilinx Vivado Simulator**. The design reads a pre-generated hexadecimal image file, performs fixed-point bilinear interpolation, and writes the resized image back as a hexadecimal file for verification.
+
+### Simulation Steps
+
+1. Open the project in **Xilinx Vivado**.
+2. Add the Verilog source file from the `rtl/` directory and the testbench from the `tb/` directory.
+3. Select the desired input image (`grayscale.hex` or `rgb.hex`) from the `data/` directory and rename it to **`image.hex`**.
+4. Place `image.hex` in the simulation working directory so it can be accessed by the `$readmemh` system task.
+5. Run the behavioral simulation.
+6. Once the simulation completes, the scaler automatically generates **`output.hex`** using the `$writememh` system task.
+7. The generated hexadecimal file can then be converted back to an image using any suitable external utility for visual verification.
+
+## Results
+
+The SCALE-X image scaling engine was validated using both **grayscale** and **RGB** test images. The visual results demonstrate that the fixed-point bilinear interpolation implementation successfully produces smooth scaled images while preserving image details.
+
+## Grayscale Image Scaling
+
+|                     Input Image                    |                    Scaled Output                    |
+| :------------------------------------------------: | :-------------------------------------------------: |
+| <img width="64" height="64" alt="test_grayscale_64x64" src="https://github.com/user-attachments/assets/687bd9e6-19b1-4e17-9c03-1dc695e90ea8" />| <img width="128" height="128" alt="output_greyscale_128x128" src="https://github.com/user-attachments/assets/4ca9be45-0001-44eb-bffd-dd8453f2cdd8" />|
+
+---
+
+## RGB Image Scaling
+
+|                  Input Image                 |                 Scaled Output                 |
+| :------------------------------------------: | :-------------------------------------------: |
+| <img width="64" height="64" alt="test_rgb_64x64" src="https://github.com/user-attachments/assets/0013489d-1fd7-4355-acd4-8c99b0137e56" />| <img width="128" height="128" alt="output_rgb_128x128" src="https://github.com/user-attachments/assets/38a17fbe-4e59-4f52-96e8-7683126ae4af" />|
+
+The generated output images confirm the correct operation of the five-stage pipelined architecture and the fixed-point bilinear interpolation algorithm for both supported image formats.
